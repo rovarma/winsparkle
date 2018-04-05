@@ -63,6 +63,13 @@ public:
         return ms_appcastURL;
     }
 
+	/// Get credentials for HTTP basic auth
+	static std::string GetBasicAuthCredentials()
+	{
+		CriticalSectionLocker lock(ms_csVars);
+		return ms_basicAuthCredentials;
+	}
+
     /// Return application name
     static std::wstring GetAppName()
     {
@@ -181,6 +188,13 @@ public:
         CriticalSectionLocker lock(ms_csVars);
         ms_appcastURL = url;
     }
+
+	/// Set credentials for HTTP basic auth
+	static void SetBasicAuthCredentials(const char *user, const char *pass)
+	{
+		CriticalSectionLocker lock(ms_csVars);
+		ms_basicAuthCredentials = std::string(user) + ":" + std::string(pass);
+	}
 
     /// Set application name
     static void SetAppName(const wchar_t *name)
@@ -323,6 +337,7 @@ private:
     static std::wstring ms_appVersion;
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
+	static std::string  ms_basicAuthCredentials;
 };
 
 } // namespace winsparkle

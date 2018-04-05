@@ -160,6 +160,14 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_langid(unsigned short lang);
 WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
 
 /**
+    Sets optional credentials to use for HTTP basic authentication
+
+    @param user  Username to use for authentication
+	@param pass  Password to use for authentication
+ */
+WIN_SPARKLE_API void __cdecl win_sparkle_set_basic_auth_credentials(const char *user, const char *pass);
+
+/**
     Sets DSA public key.
 
     Only PEM format is supported.
@@ -303,7 +311,7 @@ typedef void (__cdecl *win_sparkle_error_callback_t)();
 WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_callback_t callback);
 
 /// Callback type for win_sparkle_can_shutdown_callback()
-typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
+typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)(void*);
 
 /**
     Set callback for querying the application if it can be closed.
@@ -321,11 +329,11 @@ typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
 
     @see win_sparkle_set_shutdown_request_callback()
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback, void* userData);
 
 
 /// Callback type for win_sparkle_shutdown_request_callback()
-typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
+typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)(void*);
 
 /**
     Set callback for shutting down the application.
@@ -345,7 +353,7 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
 
     @see win_sparkle_set_can_shutdown_callback()
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t callback, void* userData);
 
 /// Callback type for win_sparkle_did_find_update_callback()
 typedef void(__cdecl *win_sparkle_did_find_update_callback_t)();

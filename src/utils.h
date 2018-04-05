@@ -125,6 +125,28 @@ inline bool CheckForInsecureURL(const std::string& url, const std::string& purpo
     return true;
 }
 
+inline std::string BinToBase64(const std::string& bin)
+{
+	DWORD nDestinationSize = 0;
+	std::string base64;
+
+	bool ok = false;
+
+	if (CryptBinaryToStringA((const BYTE*)bin.data(), bin.size(), CRYPT_STRING_BASE64, NULL, &nDestinationSize))
+	{
+		base64.resize(nDestinationSize);
+		if (CryptBinaryToStringA((const BYTE*)bin.data(), bin.size(), CRYPT_STRING_BASE64, (char*)base64.data(), &nDestinationSize))
+		{
+			ok = true;
+		}
+	}
+
+	if (!ok)
+		throw std::runtime_error("Failed to encode base64 string");
+
+	return base64;
+}
+
 } // namespace winsparkle
 
 #endif // _utils_h_

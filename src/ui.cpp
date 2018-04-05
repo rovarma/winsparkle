@@ -58,7 +58,7 @@
 #include <mshtml.h>
 #include <commctrl.h>
 #include <shellapi.h>
-
+#include <comutil.h>
 
 #if !wxCHECK_VERSION(2,9,0)
 #error "wxWidgets >= 2.9 is required to compile this code"
@@ -329,7 +329,11 @@ WinSparkleDialog::WinSparkleDialog()
     wxSize dpi = wxClientDC(this).GetPPI();
     m_scaleFactor = dpi.y / 96.0;
 
-    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON)));
+	wxIcon windowIcon = GetApplicationIcon(GetSystemMetrics(SM_CXSMICON));
+	if (!windowIcon.IsOk())
+		windowIcon = LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON));
+	
+	SetIcon(windowIcon);
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -534,11 +538,11 @@ UpdateDialog::UpdateDialog()
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
-    m_updateButtonsSizer->Add
-                          (
-                            new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
-                            wxSizerFlags().Border(wxRIGHT, PX(20))
-                          );
+//     m_updateButtonsSizer->Add
+//                           (
+//                             new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
+//                             wxSizerFlags().Border(wxRIGHT, PX(20))
+//                           );
     m_updateButtonsSizer->AddStretchSpacer(1);
     m_updateButtonsSizer->Add
                           (
@@ -1030,13 +1034,20 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
 
     if( !info.ReleaseNotesURL.empty() )
     {
+		// Set Authorization header of credentials are set
+		std::string basicAuthCredentials = Settings::GetBasicAuthCredentials();
+		std::string basicAuthHeader;
+		if (!basicAuthCredentials.empty())
+			basicAuthHeader = "Authorization: Basic " + BinToBase64(basicAuthCredentials);
+
+		_variant_t basicAuthHeaderVariant = _bstr_t(basicAuthHeader.c_str());
         m_webBrowser->Navigate
                       (
                           wxBasicString(info.ReleaseNotesURL),
                           NULL,  // Flags
                           NULL,  // TargetFrameName
                           NULL,  // PostData
-                          NULL   // Headers
+                          &basicAuthHeaderVariant.GetVARIANT()   // Headers
                       );
     }
     else if ( !info.Description.empty() )

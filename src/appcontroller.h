@@ -84,17 +84,19 @@ public:
     }
 
     /// Set the win_sparkle_can_shutdown_callback_t function
-    static void SetCanShutdownCallback(win_sparkle_can_shutdown_callback_t callback)
+    static void SetCanShutdownCallback(win_sparkle_can_shutdown_callback_t callback, void* userData)
     {
         CriticalSectionLocker lock(ms_csVars);
         ms_cbIsReadyToShutdown = callback;
+		ms_cbIsReadyToShutdownUserData = userData;
     }
 
     /// Set the win_sparkle_shutdown_request_callback_t function
-    static void SetShutdownRequestCallback(win_sparkle_shutdown_request_callback_t callback)
+    static void SetShutdownRequestCallback(win_sparkle_shutdown_request_callback_t callback, void* userData)
     {
         CriticalSectionLocker lock(ms_csVars);
         ms_cbRequestShutdown = callback;
+		ms_cbRequestShutdownUserData = userData;
     }
 
     /// Set the win_sparkle_did_find_update_callback_t function
@@ -128,7 +130,9 @@ private:
 
     static win_sparkle_error_callback_t               ms_cbError;
     static win_sparkle_can_shutdown_callback_t        ms_cbIsReadyToShutdown;
+	static void*									  ms_cbIsReadyToShutdownUserData;
     static win_sparkle_shutdown_request_callback_t    ms_cbRequestShutdown;
+	static void*								      ms_cbRequestShutdownUserData;
     static win_sparkle_did_find_update_callback_t     ms_cbDidFindUpdate;
     static win_sparkle_did_not_find_update_callback_t ms_cbDidNotFindUpdate;
     static win_sparkle_update_cancelled_callback_t    ms_cbUpdateCancelled;

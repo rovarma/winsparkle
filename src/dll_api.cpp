@@ -150,6 +150,15 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url)
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_basic_auth_credentials(const char *user, const char *pass)
+{
+	try
+	{
+		Settings::SetBasicAuthCredentials(user, pass);
+	}
+	CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem)
 {
     try
@@ -270,20 +279,20 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_ca
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback, void* userData)
 {
     try
     {
-        ApplicationController::SetCanShutdownCallback(callback);
+        ApplicationController::SetCanShutdownCallback(callback, userData);
     }
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t callback)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t callback, void* userData)
 {
     try
     {
-        ApplicationController::SetShutdownRequestCallback(callback);
+        ApplicationController::SetShutdownRequestCallback(callback, userData);
     }
     CATCH_ALL_EXCEPTIONS
 }

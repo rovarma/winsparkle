@@ -220,11 +220,17 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
     DownloadCallbackContext context(&conn);
     inet.SetStatusCallback(&DownloadInternetStatusCallback);
 
+	// Set Authorization header if credentials are set
+	std::string basicAuthCredentials = Settings::GetBasicAuthCredentials();
+	std::string basicAuthHeader;
+	if (!basicAuthCredentials.empty())
+		basicAuthHeader = "Authorization: Basic " + BinToBase64(basicAuthCredentials);
+
     HINTERNET conn_raw = InternetOpenUrlA
                          (
                              inet,
                              url.c_str(),
-                             NULL, // lpszHeaders
+                             basicAuthHeader.c_str(), // lpszHeaders
                              -1,   // dwHeadersLength
                              dwFlags,
                              (DWORD_PTR)&context  // dwContext
