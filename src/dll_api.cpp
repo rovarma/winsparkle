@@ -201,6 +201,18 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path)
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API const char* __cdecl win_sparkle_get_registry_path()
+{
+	try
+	{
+		return Settings::GetRegistryPath().c_str();
+	}
+	CATCH_ALL_EXCEPTIONS
+
+	return "";
+}
+
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_automatic_check_for_updates(int state)
 {
     try

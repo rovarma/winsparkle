@@ -110,7 +110,7 @@ public:
     }
 
     /// Return the registry path to store settings in
-    static std::string GetRegistryPath()
+    static std::string& GetRegistryPath()
     {
         CriticalSectionLocker lock(ms_csVars);
         if ( ms_registryPath.empty() )

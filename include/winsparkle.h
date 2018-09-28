@@ -251,6 +251,13 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *bu
 WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path);
 
 /**
+    Get the registry path where settings will be stored.
+
+    @since 0.3
+ */
+WIN_SPARKLE_API const char* __cdecl win_sparkle_get_registry_path();
+
+/**
     Sets whether updates are checked automatically or only through a manual call.
 
     If disabled, win_sparkle_check_update_with_ui() must be used explicitly.
